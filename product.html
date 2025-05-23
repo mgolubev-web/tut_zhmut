@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Продукт | Тут Жмут</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div id="auth-modal-placeholder"></div>
+
+  <main class="main">
+    <section class="product-section">
+      <div class="container">
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="product-details" id="product-details"></div>
+      </div>
+    </section>
+
+    <section class="recommended">
+      <div class="container">
+        <h2>Рекомендуем добавить</h2>
+        <div class="carousel-container">
+          <button class="carousel-btn prev">❮</button>
+          <div class="carousel-track" id="recommendations"></div>
+          <button class="carousel-btn next">❯</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script type="module">
+    import { ApiService } from './services/api-service.js';
+    import { CartService } from './services/cart-service.js';
+    import { AuthService } from './services/auth-service.js';
+    import { showNotification } from './utils.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const productId = new URLSearchParams(window.location.search).get('id');
+      if (!productId) return;
+
+      try {
+        const products = await ApiService.fetchProducts();
+        const product = products[productId];
+        if (!product) throw new Error('Product not found');
+
+        renderProductDetails(product);
+        renderRecommendations(products, productId);
+        setupEventListeners(product);
+      } catch (error) {
+        console.error('Error loading product:', error);
+        document.getElementById('product-details').innerHTML = `
+          <div class="error-message">
+            <p>Не удалось загрузить информацию о товаре</p>
+            <a href="masla.html" class="btn">Вернуться в каталог</a>
+          </div>
+        `;
+      }
+    });
+
+    function renderProductDetails(product) {
+      document.getElementById('breadcrumbs').innerHTML = `
+        <a href="index.html">Главная</a> > 
+        <a href="masla.html">Масла</a> > 
+        <span>${product.name}</span>
+      `;
+
+      document.getElementById('product-details').innerHTML = `
+        <div class="product-grid">
+          <div class="product-gallery">
+            <img src="${product.image}" alt="${product.name}">
+          </div>
+          <div class="product-info">
+            <h1>${product.name}</h1>
+            <div class="product-meta">
+              <span class="product-availability">В наличии</span>
+            </div>
+            <div class="product-price">${product.price}</div>
+            <p class="product-description">${product.description}</p>
+
+            <div class="product-tabs">
+              <!-- Табы остаются без изменений -->
+            </div>
+
+            <div class="product-specs">
+              <!-- Характеристики остаются без изменений -->
+            </div>
+
+            <div class="product-actions">
+              <div class="quantity-selector">
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1" class="quantity-input">
+                <button class="plus">+</button>
+              </div>
+              <button class="btn btn-add-to-cart">Добавить в корзину</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setupEventListeners(product) {
+      document.querySelector('.btn-add-to-cart').addEventListener('click', () => {
+        if (!AuthService.isAuthenticated()) {
+          showNotification('Для добавления в корзину войдите в систему', 'error');
+          return;
+        }
+
+        const quantity = parseInt(document.querySelector('.quantity-input').value);
+        CartService.addProduct({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          volume: product.specifications?.['Объем']
+        }, quantity);
+
+        showNotification(`${product.name} добавлен в корзину`);
+      });
+    }
+
+    function renderRecommendations(products, currentId) {
+      const recommendations = Object.keys(products)
+        .filter(id => id !== currentId)
+        .slice(0, 4)
+        .map(id => {
+          const p = products[id];
+          return `
+            <div class="product-card-mini">
+              <a href="product.html?id=${id}">
+                <img src="${p.image}" alt="${p.name}">
+                <h4>${p.name}</h4>
+                <p>${p.price}</p>
+              </a>
+            </div>
+          `;
+        });
+
+      document.getElementById('recommendations').innerHTML = recommendations.join('');
+    }
+  </script>
+</body>
+</html>

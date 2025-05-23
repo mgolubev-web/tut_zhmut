@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>На пробу | Тут жмут - Сыродавленные масла</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+    <div id="auth-modal-placeholder"></div>
+
+    <main class="main">
+        <section class="trial-section">
+            <div class="container">
+                <h1 class="centered-title">Набор на пробу</h1>
+                <p class="section-description">Попробуйте наши масла в наборе "На пробу"</p>
+
+                <div class="trial-kits">
+                    <div class="trial-kit">
+                        <img src="images/products/oil1.jpg" alt="Набор масел на пробу">
+                        <h3>На пробу</h3>
+                        <p>3 вида масла по 100 мл</p>
+                        <div class="price">990 ₽</div>
+                        <button class="btn btn-add-to-cart">Добавить в корзину</button>
+                    </div>
+                </div>
+
+                <div class="trial-benefits">
+                    <h2 class="centered-title">Почему стоит попробовать</h2>
+                    <div class="benefits-grid">
+                        <div class="benefit">
+                            <img src="images/logo.png" alt="Маленькие объемы">
+                            <h4>Каждый месяц разные наборы</h4>
+                            <p>В начале каждого месяца в нашем телеграм-канале мы проводим голосование.
+                                Три вида масла, победившие в голосовании, становятся набором масел "На пробу"</p>
+                        </div>
+                        <div class="benefit">
+                            <img src="images/logo.png" alt="Отличный подарок">
+                            <h4>Отличный подарок</h4>
+                            <p>Идеально для знакомства с нашими продуктами</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="utils.js"></script>
+    <script src="cart.js"></script>
+    <script src="search.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComponent('header.html', 'header-placeholder');
+            loadComponent('footer.html', 'footer-placeholder');
+        });
+    </script>
+</body>
+</html>

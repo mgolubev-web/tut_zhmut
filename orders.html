@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мои заказы | Тут жмут</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div id="auth-modal-placeholder"></div>
+
+  <main class="main">
+    <section class="orders-section">
+      <div class="container">
+        <h1>Мои заказы</h1>
+        <div class="orders-list" id="orders-list">
+          <p class="empty-orders-message">Загрузка заказов...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script type="module">
+    import { AuthService } from './services/auth-service.js';
+    import { ApiService } from './services/api-service.js';
+    import { showNotification } from './utils.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!AuthService.isAuthenticated()) {
+        showNotification('Для просмотра заказов войдите в систему', 'error');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        // Здесь должен быть запрос к API для получения заказов пользователя
+        const orders = await fetchUserOrders();
+        renderOrders(orders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        document.getElementById('orders-list').innerHTML = `
+          <p class="error-message">Не удалось загрузить историю заказов</p>
+        `;
+      }
+    });
+
+    async function fetchUserOrders() {
+      // Заглушка - в реальном приложении здесь будет запрос к API
+      return [
+        {
+          id: '12345',
+          date: '2023-05-15',
+          status: 'completed',
+          items: [
+            { id: 'lnyanoe', name: 'Льняное масло', price: '450 ₽', quantity: 1, image: 'images/oils/lnyanoe.jpg' },
+            { id: 'konoplyanoe', name: 'Конопляное масло', price: '550 ₽', quantity: 2, image: 'images/oils/konoplyanoe.jpg' }
+          ],
+          total: '1550 ₽'
+        },
+        {
+          id: '12344',
+          date: '2023-05-10',
+          status: 'processing',
+          items: [
+            { id: 'tykvennoe', name: 'Тыквенное масло', price: '600 ₽', quantity: 1, image: 'images/oils/tykvennoe.jpg' }
+          ],
+          total: '600 ₽'
+        }
+      ];
+    }
+
+    function renderOrders(orders) {
+      const container = document.getElementById('orders-list');
+      
+      if (!orders.length) {
+        container.innerHTML = `
+          <p class="empty-orders-message">У вас пока нет заказов</p>
+          <a href="masla.html" class="btn">Перейти в каталог</a>
+        `;
+        return;
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-number">Заказ #${order.id}</span>
+            <span class="order-date">${formatDate(order.date)}</span>
+            <span class="order-status ${order.status}">${getStatusText(order.status)}</span>
+          </div>
+          <div class="order-products">
+            ${order.items.map(item => `
+              <div class="order-product">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="product-info">
+                  <h3>${item.name}</h3>
+                  <p>${item.quantity} × ${item.price.replace(' ₽', '')} ₽</p>
+                </div>
+                <div class="product-price">${parseInt(item.price) * item.quantity} ₽</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="order-footer">
+            <span class="order-total">Итого: ${order.total}</span>
+            ${order.status === 'processing' ? `
+              <button class="btn btn-small btn-cancel-order" data-id="${order.id}">Отменить заказ</button>
+            ` : `
+              <button class="btn btn-small btn-repeat-order" data-id="${order.id}">Повторить заказ</button>
+            `}
+          </div>
+        </div>
+      `).join('');
+
+      setupOrderButtons();
+    }
+
+    function setupOrderButtons() {
+      document.querySelectorAll('.btn-repeat-order').forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Логика повторения заказа
+          showNotification('Товары из заказа добавлены в корзину');
+        });
+      });
+
+      document.querySelectorAll('.btn-cancel-order').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            // Логика отмены заказа
+            showNotification('Заказ успешно отменен');
+            btn.textContent = 'Отменен';
+            btn.disabled = true;
+          } catch (error) {
+            showNotification('Не удалось отменить заказ', 'error');
+          }
+        });
+      });
+    }
+
+    function formatDate(dateString) {
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('ru-RU', options);
+    }
+
+    function getStatusText(status) {
+      const statuses = {
+        processing: 'В обработке',
+        completed: 'Доставлен',
+        cancelled: 'Отменен'
+      };
+      return statuses[status] || status;
+    }
+  </script>
+</body>
+</html>

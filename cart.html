@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина | Тут жмут</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Шапка (такая же как на других страницах) -->
+    <div id="header-placeholder"></div>
+
+    <main class="main">
+        <section class="cart-page">
+            <div class="container">
+                <h1>Ваша корзина</h1>
+
+                <div id="cart-items" class="cart-items">
+                    <!-- Товары будут добавляться сюда через JS -->
+                    <p class="empty-cart-message">Ваша корзина пуста</p>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="total">
+                        <span>Итого:</span>
+                        <span id="cart-total">0 ₽</span>
+                    </div>
+                    <button id="checkout-btn" class="btn">Оформить заказ</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал (такой же как на других страницах) -->
+    <div id="footer-placeholder"></div>
+
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const emptyMessage = document.querySelector('.empty-cart-message');
+
+            if (cart.length === 0) {
+                emptyMessage.style.display = 'block';
+                return;
+            } else {
+                emptyMessage.style.display = 'none';
+            }
+
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-info">
+                        <h3>${item.name}</h3>
+                        <p>${item.volume}</p>
+                    </div>
+                    <div class="cart-item-price">
+                        ${item.price} ₽
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn minus">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="cart-item-remove">
+                        <button class="remove-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+
+                cartItems.appendChild(itemElement);
+                total += item.price * item.quantity;
+            });
+
+            cartTotal.textContent = `${total} ₽`;
+        });
+    </script>
+</body>
+
+</html>

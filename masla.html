@@ -1,0 +1,64 @@
+<!-- masla.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Масла | Тут Жмут</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main class="main">
+  <section class="catalog-section">
+    <div class="container">
+      <h2>Наши масла</h2>
+      <div class="catalog-grid" id="catalog-grid">
+        Загрузка масел...
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function loadComponent(url, elementId) {
+    fetch(url)
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById(elementId).innerHTML = data;
+      });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    loadComponent('header.html', 'header-placeholder');
+    loadComponent('footer.html', 'footer-placeholder');
+
+    fetch('/products.json')
+      .then(res => res.json())
+      .then(products => {
+        const grid = document.getElementById("catalog-grid");
+        grid.innerHTML = ""; // очищаем временный текст
+
+        Object.keys(products).forEach(productId => {
+          const product = products[productId];
+          grid.innerHTML += `
+            <a href="product.html?id=${productId}" class="product-card">
+              <img src="${product.image}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p class="product-price">${product.price}</p>
+              <ul class="product-specs">
+                <li><strong>Объем:</strong> ${product.specifications["Объем"]}</li>
+                <li><strong>Состав:</strong> ${product.specifications["Состав"]}</li>
+              </ul>
+            </a>
+          `;
+        });
+      });
+  });
+</script>
+
+</body>
+</html>

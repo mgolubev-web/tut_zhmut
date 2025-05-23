@@ -1,0 +1,31 @@
+<!-- auth-modal.html -->
+<div id="auth-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h3>Авторизация</h3>
+    <form id="auth-form">
+      <div class="form-group">
+        <input type="email" id="auth-email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="auth-password" placeholder="Пароль" required>
+      </div>
+      <button type="submit" class="btn">Войти</button>
+      <p class="auth-switch">Нет аккаунта? <a href="#" id="switch-to-register">Зарегистрироваться</a></p>
+    </form>
+
+    <form id="register-form" class="hidden">
+      <div class="form-group">
+        <input type="text" id="reg-name" placeholder="Имя" required>
+      </div>
+      <div class="form-group">
+        <input type="email" id="reg-email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="reg-password" placeholder="Пароль" required>
+      </div>
+      <button type="submit" class="btn">Зарегистрироваться</button>
+      <p class="auth-switch">Уже есть аккаунт? <a href="#" id="switch-to-login">Войти</a></p>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль | Тут жмут</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="main">
+        <section class="profile-section">
+            <div class="container">
+                <h1>Мой профиль</h1>
+                <div class="profile-content">
+                    <form class="profile-form">
+                        <div class="form-group">
+                            <label for="profile-name">Имя</label>
+                            <input type="text" id="profile-name" value="Иван Иванов">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email">Email</label>
+                            <input type="email" id="profile-email" value="ivan@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-phone">Телефон</label>
+                            <input type="tel" id="profile-phone" value="+7 (123) 456-78-90">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-address">Адрес доставки</label>
+                            <textarea id="profile-address" rows="3">г. Москва, ул. Примерная, д. 1, кв. 2</textarea>
+                        </div>
+                        <button type="submit" class="btn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Модальное окно авторизации -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-content">
+            <span class="close-modal">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Вход</div>
+                <div class="auth-tab" data-tab="register">Регистрация</div>
+            </div>
+
+            <form id="login-form" class="auth-form active">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Пароль" required>
+                <button type="submit" class="btn">Войти</button>
+            </form>
+
+            <form id="register-form" class="auth-form">
+                <input type="text" placeholder="Имя" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Пароль" required>
+                <input type="password" placeholder="Повторите пароль" required>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+    <script src="search.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
